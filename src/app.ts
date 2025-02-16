@@ -1,17 +1,21 @@
-import express, { Express, Request, Response } from "express";
+import express, { Express } from "express";
 import dotenv from "dotenv";
+import { initializeDB } from "./services/db-service";
 
 dotenv.config();
 
 const app: Express = express();
 const port = process.env.PORT || 3000;
 
-app.use(express.static("public"));
+initializeDB().then(() => {
+  app.use(express.static("public"));
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("To Do Server");
+  app.listen(port, () => {
+    console.log(`[server]: Server is running at http://localhost:${port}`);
+  });
+})
+.catch((error) => {
+  console.error(`[server]: Error initializing database: ${error}`);
+  process.exit(1);
 });
 
-app.listen(port, () => {
-  console.log(`[server]: Server is running at http://localhost:${port}`);
-});
