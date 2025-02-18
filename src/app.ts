@@ -1,20 +1,23 @@
-import express, { Express } from "express";
+import express from "express";
 import dotenv from "dotenv";
-import { initializeDB } from "./services/db-service";
+import cors from "cors";
+import { initializeDB } from "./services/db.service";
+import { todoRouter } from "./routers/todo.router";
 
 dotenv.config();
 
-const app: Express = express();
-const port = process.env.PORT || 3000;
-
 initializeDB().then(() => {
-  app.use(express.static("public"));
+  const app = express();
+  const port = process.env.PORT || 3000;
+  app.use(cors());
+
+  //routes
+  app.use('/todo', todoRouter);
 
   app.listen(port, () => {
     console.log(`[server]: Server is running at http://localhost:${port}`);
   });
-})
-.catch((error) => {
+}).catch((error) => {
   console.error(`[server]: Error initializing database: ${error}`);
   process.exit(1);
 });
