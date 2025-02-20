@@ -12,7 +12,7 @@ initializeDB().then(() => {
   app.use(cors());
 
   //routes
-  app.use('/todo', todoRouter);
+  app.use('/api/todo', todoRouter);
 
   app.listen(port, () => {
     console.log(`[server]: Server is running at http://localhost:${port}`);

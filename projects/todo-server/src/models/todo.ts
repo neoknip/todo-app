@@ -3,7 +3,7 @@ import { TodoItem } from "./todo-item";
 
 export interface Todo {
     _id?: ObjectId;
-    name: string;
+    title: string;
     description: string;
     todoItems: TodoItem[];
 }

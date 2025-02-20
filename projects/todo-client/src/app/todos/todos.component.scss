@@ -1,0 +1,45 @@
+main {
+  width: 100%;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
+  .content {
+    flex-grow: 1;
+    display: flex;
+    align-items: start;
+    padding: 1em;
+    gap: 1em;
+
+    .todo-card {
+      width: 100%;
+    }
+  }
+
+  .add-button {
+    position: absolute;
+    bottom: 1em;
+    right: 1em;
+  }
+}
+
+@media screen and (min-width: 600px) {
+  main .content {
+
+    .todo-card {
+      width: 50%;
+    }
+  }
+
+}
+
+@media screen and (min-width: 900px) {
+  main .content {
+
+    .todo-card {
+      width: 33.33%;
+    }
+  }
+
+}

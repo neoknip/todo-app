@@ -1,0 +1,19 @@
+<main class="main">
+  <mat-toolbar>
+    <span>Todos</span>
+  </mat-toolbar>
+  <div class="content">
+    @for (todo of todos(); track todo.id) {
+      <mat-card class="todo-card" appearance="outlined">
+        <mat-card-header>
+          <mat-card-title>{{ todo.title }}</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>{{ todo.description }}</mat-card-content>
+      </mat-card>
+    }
+  </div>
+  <button mat-fab extended color="primary" class="add-button" (click)="addTodo()">
+    <mat-icon>add</mat-icon>
+    ADD
+  </button>
+</main>
