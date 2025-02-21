@@ -5,22 +5,22 @@ main {
   flex-direction: column;
   position: relative;
 
-  .content {
-    flex-grow: 1;
-    display: flex;
-    align-items: start;
-    padding: 1em;
-    gap: 1em;
-
-    .todo-card {
-      width: 100%;
-    }
+  .todo-toolbar {
+    border-bottom: 1px solid var(--mat-sys-outline-variant);
   }
 
-  .add-button {
-    position: absolute;
-    bottom: 1em;
-    right: 1em;
+  .sidenav-container {
+    flex-grow: 1;
+    display: flex;
+
+    .sidenav-section {
+      height: 100%;
+    }
+
+    .sidenav-content {
+      flex-grow: 1;
+      padding: 1em;
+    }
   }
 }
 

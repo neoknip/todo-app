@@ -1,0 +1,20 @@
+<div class="todo-list">
+  @if (todos().length) {
+    <mat-nav-list>
+      @for (todo of todos(); track todo.id) {
+      <mat-list-item routerLinkActive #rla="routerLinkActive" [activated]="rla.isActive">
+        <a matListItemTitle [routerLink]="todo.id">{{ todo.title }}</a>
+        <button mat-icon-button (click)="deleteTodo(todo)" matListItemMeta>
+          <mat-icon>delete</mat-icon>
+        </button>
+      </mat-list-item>
+      }
+    </mat-nav-list>
+    }
+    <div class="actions">
+      <button mat-flat-button class="add-todo-btn" (click)="addTodo()">
+        <mat-icon>add</mat-icon>
+        ADD TODO
+      </button>
+    </div>
+</div>

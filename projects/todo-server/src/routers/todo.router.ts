@@ -70,3 +70,19 @@ todoRouter.put("/:id", async (req, res) => {
     res.status(500).send(`Failed to update task: ${error.message}`);
   }
 });
+
+/**
+ * DELETE /tasks/:id
+ */
+todoRouter.delete("/:id", async (req, res) => {
+  const id = req.params.id;
+  try {
+    const query = { _id: new ObjectId(id) };
+    const result = await collections.todos?.deleteOne(query);
+    result ? res.send() : res.status(500).send("Failed to delete task");
+  }
+  catch (error: any) {
+    console.error(error);
+    res.status(500).send(`Failed to delete task: ${error.message}`);
+  }
+});

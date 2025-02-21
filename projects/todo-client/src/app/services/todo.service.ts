@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Todo } from '@app/models/todos';
+import { CreateTodoPayload, CreateTodoResponse, Todo } from '@app/models/todos';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -14,15 +14,19 @@ export class TodoService {
     return this._http.get<Todo[]>('/api/todo');
   }
 
-  getTodoById(id: string): Observable<Todo> {
+  getTodo(id: string): Observable<Todo> {
     return this._http.get<Todo>(`/api/todo/${id}`);
   }
 
-  createTodo(todo: Todo): Observable<Pick<Todo, 'id'>> {
-    return this._http.post<Pick<Todo, 'id'>>('/api/todo', todo);
+  createTodo(todo: CreateTodoPayload): Observable<CreateTodoResponse> {
+    return this._http.post<CreateTodoResponse>('/api/todo', todo);
   }
 
   updateTodo(todo: Todo): Observable<any> {
     return this._http.put(`/api/todo/${todo.id}`, todo);
+  }
+
+  deleteTodo(id: string): Observable<any> {
+    return this._http.delete(`/api/todo/${id}`);
   }
 }
