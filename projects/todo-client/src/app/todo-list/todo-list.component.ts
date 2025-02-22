@@ -1,41 +1,42 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 import { CreateTodoFormData, Todo } from '@app/models/todos';
 
 import { TodoService } from '@app/services/todo.service';
+
 import { CreateTodoComponent } from '@app/create-todo/create-todo.component';
 
 @Component({
   selector: 'app-todo-list',
-  imports: [MatButtonModule, MatDialogModule, MatIconModule, MatListModule, RouterModule],
+  imports: [MatButtonModule, MatDialogModule, MatIconModule, MatListModule, MatProgressBarModule, RouterModule],
   templateUrl: './todo-list.component.html',
   styleUrl: './todo-list.component.scss'
 })
-export class TodoListComponent implements OnInit {
-
-  public readonly creatingTodo = signal<boolean>(false);
-  public readonly deletingTodo = signal<boolean>(false);
-  public readonly fetchingTodos = signal<boolean>(false);
-  public readonly todos = signal<Todo[]>([]);
+export class TodoListComponent {
 
   private _todoService = inject(TodoService);
   private _dialog = inject(MatDialog);
   private _router = inject(Router);
   private _route = inject(ActivatedRoute);
 
-  ngOnInit(): void {
-    this._getTodos();
-  }
+  public readonly creatingTodo = signal<boolean>(false);
+  public readonly deletingTodo = signal<boolean>(false);
+
+  public todos = rxResource({
+    loader: () => this._todoService.getTodos(),
+  });
 
   public addTodo(): void {
     const dialogRef = this._dialog.open<CreateTodoComponent, void, CreateTodoFormData>(CreateTodoComponent, {
-      width: '250px',
+      panelClass: 'create-todo-dialog'
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -47,27 +48,13 @@ export class TodoListComponent implements OnInit {
 
   public deleteTodo(todo: Todo): void {
     this.deletingTodo.set(true);
-    this._todoService.deleteTodo(todo.id).subscribe({
+    this._todoService.deleteTodo(todo._id).subscribe({
       next: () => {
         this.deletingTodo.set(false);
       },
       error: (error) => {
         console.error('Failed to delete todo', error);
         this.deletingTodo.set(false);
-      }
-    });
-  }
-
-  private _getTodos(): void {
-    this.fetchingTodos.set(true);
-    this._todoService.getTodos().subscribe({
-      next: (todos) => {
-        this.todos.set(todos);
-        this.fetchingTodos.set(false);
-      },
-      error: (error) => {
-        console.error('Failed to fetch todos', error);
-        this.fetchingTodos.set(false);
       }
     });
   }
@@ -80,9 +67,9 @@ export class TodoListComponent implements OnInit {
       todoItems: []
     }).subscribe({
       next: (response) => {
-        this._getTodos();
         this.creatingTodo.set(false);
-        this._router.navigate([response.id, { relativeTo: this._route }]);
+        this.todos.reload();
+        this._router.navigate([response._id, { relativeTo: this._route }]);
       },
       error: (error) => {
         console.error('Failed to create todo', error);

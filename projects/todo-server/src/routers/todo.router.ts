@@ -13,7 +13,7 @@ todoRouter.use(express.json());
 todoRouter.get("/", async (_req, res) => {
   try {
     const tasks = await collections.todos?.find().toArray() as Todo[];
-    res.json(tasks ?? []);
+    res.status(200).json(tasks ?? []);
   }
   catch (error: any) {
     console.error(error);
@@ -45,7 +45,7 @@ todoRouter.post("/", async (req, res) => {
     const task = req.body as Todo;
     const result = await collections.todos?.insertOne(task);
     result ? res.status(201).json({
-      id: result.insertedId
+      _id: result.insertedId
     }) : res.status(500).send("Failed to create task");
   }
   catch (error: any) {

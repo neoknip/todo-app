@@ -1,19 +1,15 @@
-<mat-card>
-  @if (todo()) {
+<mat-card class="todo-card">
+  @if (todo.hasValue()) {
   <mat-card-header>
-    <mat-card-title>{{ todo()?.title }}</mat-card-title>
-    <mat-card-subtitle>{{ todo()?.description }}</mat-card-subtitle>
+    <mat-card-title>{{ todo.value()?.title }}</mat-card-title>
+    <mat-card-subtitle>{{ todo.value()?.description }}</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
-    @if (todo()?.todoItems?.length) {
-      @for (todoItem of todo()?.todoItems; track $index) {
+    @if (todo.value()?.todoItems?.length) {
+      @for (todoItem of todo.value()?.todoItems; track $index) {
         <mat-checkbox>{{ todoItem.name }}</mat-checkbox>
       }
     }
   </mat-card-content>
-  <mat-card-actions>
-    <button mat-button>Edit</button>
-    <button mat-button>Delete</button>
-  </mat-card-actions>
   }
 </mat-card>

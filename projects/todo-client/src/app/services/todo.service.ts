@@ -23,7 +23,7 @@ export class TodoService {
   }
 
   updateTodo(todo: Todo): Observable<any> {
-    return this._http.put(`/api/todo/${todo.id}`, todo);
+    return this._http.put(`/api/todo/${todo._id}`, todo);
   }
 
   deleteTodo(id: string): Observable<any> {

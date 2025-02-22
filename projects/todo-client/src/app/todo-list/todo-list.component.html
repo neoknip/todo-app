@@ -1,12 +1,17 @@
 <div class="todo-list">
-  @if (todos().length) {
-    <mat-nav-list>
-      @for (todo of todos(); track todo.id) {
-      <mat-list-item routerLinkActive #rla="routerLinkActive" [activated]="rla.isActive">
-        <a matListItemTitle [routerLink]="todo.id">{{ todo.title }}</a>
-        <button mat-icon-button (click)="deleteTodo(todo)" matListItemMeta>
-          <mat-icon>delete</mat-icon>
-        </button>
+  @if (todos.isLoading()) {
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  }
+  @if (todos.hasValue() && todos.value()?.length) {
+    <mat-nav-list class="todo-nav-list">
+      @for (todo of todos.value(); track todo._id) {
+      <mat-list-item [routerLink]="[todo._id]" routerLinkActive #rla="routerLinkActive" [activated]="rla.isActive">
+        <div matListItemTitle >{{ todo.title }}</div>
+        @if (rla.isActive) {
+          <button mat-icon-button (click)="deleteTodo(todo)" matListItemMeta>
+            <mat-icon>delete</mat-icon>
+          </button>
+        }
       </mat-list-item>
       }
     </mat-nav-list>

@@ -23,16 +23,8 @@ import { TodoListComponent } from "../todo-list/todo-list.component";
 })
 export class TodosComponent implements OnInit {
 
-  public readonly todos = signal<Todo[]>([]);
-
   constructor() { }
 
   ngOnInit(): void {
-
   }
-
-  public addTodo(): void {
-    // Add a new todo
-  }
-
 }

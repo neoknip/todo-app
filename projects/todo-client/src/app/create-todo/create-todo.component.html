@@ -1,4 +1,16 @@
-<h2>Create Todo</h2>
-<mat-dialog-content>
-  <form></form>
-</mat-dialog-content>
+<h2 mat-dialog-title>Create Todo</h2>
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <mat-form-field class="full-width">
+      <input matInput placeholder="Title" formControlName="title" required cdkFocusInitial>
+      <mat-error *ngIf="form.get('title')?.hasError('required')">Title is required</mat-error>
+    </mat-form-field>
+    <mat-form-field class="full-width">
+      <textarea matInput placeholder="Description" formControlName="description" maxlength="256"></textarea>
+    </mat-form-field>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button type="button" mat-dialog-close>CANCEL</button>
+    <button mat-button type="submit" color="primary">CREATE</button>
+  </mat-dialog-actions>
+</form>

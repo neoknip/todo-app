@@ -1,14 +1,14 @@
 import { TodoItem } from "./todo-item";
 
 export interface Todo {
-  id: string;
+  _id: string;
   title: string;
   description: string;
   todoItems: TodoItem[];
 }
 
-export type CreateTodoPayload = Omit<Todo, 'id'>;
+export type CreateTodoPayload = Omit<Todo, '_id'>;
 
-export type CreateTodoResponse = Pick<Todo, 'id'>;
+export type CreateTodoResponse = Pick<Todo, '_id'>;
 
-export type CreateTodoFormData = Omit<Todo, 'id' | 'todoItems'>;
+export type CreateTodoFormData = Omit<Todo, '_id' | 'todoItems'>;
