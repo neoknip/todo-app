@@ -69,7 +69,7 @@ export class TodoListComponent {
       next: (response) => {
         this.creatingTodo.set(false);
         this.todos.reload();
-        this._router.navigate([response._id, { relativeTo: this._route }]);
+        this._router.navigate(['/todos', response._id]);
       },
       error: (error) => {
         console.error('Failed to create todo', error);
