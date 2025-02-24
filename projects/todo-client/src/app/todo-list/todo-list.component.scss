@@ -1,10 +1,19 @@
 .todo-list {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  .todo-list-title {
+    margin: 1em;
+  }
+
   .todo-nav-list {
-    padding: 1em;
+    flex: 0 1 auto;
+    overflow-y: auto;
   }
 
   .actions {
-    padding: 1em;
+    margin: 1em;
     .add-todo-btn {
       width: 100%;
     }
