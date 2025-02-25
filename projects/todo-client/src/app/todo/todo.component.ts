@@ -125,6 +125,7 @@ export class TodoComponent implements OnInit, AfterViewInit, OnDestroy {
         next: () => {
           this.todoItemForm.reset();
           this.showNewTodoForm.set(false);
+          this.todo.reload();
         },
         error: (error) => {
           console.error('Failed to add todo item', error);

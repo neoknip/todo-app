@@ -99,7 +99,10 @@ todoRouter.post("/:id/item", async (req, res) => {
     } as TodoItem;
     const result = await collections.todos?.updateOne(query, {
       $push: {
-        todoItems: todoItem
+        todoItems: {
+          $each: [todoItem],
+          $position: 0
+        },
       }
     });
     result ? res.status(200).send({
@@ -115,10 +118,14 @@ todoRouter.post("/:id/item", async (req, res) => {
 todoRouter.put("/:id/item", async (req, res) => {
   const id = req.params.id;
   const todoItem = req.body as TodoItem;
+  const { _id: todoItemId, ...todoItemData} = todoItem;
   try {
-    const query = { _id: new ObjectId(id), "todoItems._id": new ObjectId(todoItem._id)};
+    const query = { _id: new ObjectId(id), "todoItems._id": new ObjectId(todoItemId)};
     const result = await collections.todos?.updateOne(query, {
-      $set: {"todoItems.$": todoItem}
+      $set: {"todoItems.$": {
+        _id: new ObjectId(todoItemId),
+        ...todoItemData
+      }}
     });
     result ? res.status(204).send(): res.status(500).send('Failed to update todo item');
   }

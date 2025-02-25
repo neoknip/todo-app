@@ -7,11 +7,16 @@
   <mat-card-content class="todo-content">
     <button mat-button class="add-todo-item-btn" (click)="onAddTodoItem()">
       <mat-icon>add_task</mat-icon>
-      Add Todo Item
+      ADD ITEM
     </button>
     @if (showNewTodoForm()) {
       <div class="new-todo-item">
-        <ng-container [ngTemplateOutlet]="todoItem"></ng-container>
+        <div class="new-item-icon">
+          <mat-icon class="add-item-icon">radio_button_unchecked</mat-icon>
+        </div>
+        <div class="new-item-form-container">
+          <ng-container [ngTemplateOutlet]="todoItem"></ng-container>
+        </div>
       </div>
     }
     @if (todo.value()?.todoItems?.length) {
@@ -29,18 +34,13 @@
         </div>
       }
     }
-
   </mat-card-content>
   }
 </mat-card>
 
 <ng-template #todoItem>
   <form [formGroup]="todoItemForm" (focusout)="onTodoItemFormBlur($event)" class="todo-item-form" #todoItemFormEl>
-    <mat-form-field class="todo-item-form-field" appearance="outline">
-      <input matInput placeholder="Name" formControlName="name">
-    </mat-form-field>
-    <mat-form-field class="todo-item-form-field" appearance="outline">
-      <textarea matInput placeholder="Details" formControlName="description"></textarea>
-    </mat-form-field>
+      <input class="item-name-input" placeholder="Name" formControlName="name">
+      <textarea class="item-details-ta" placeholder="Details" formControlName="description" maxlength="256"></textarea>
   </form>
 </ng-template>
