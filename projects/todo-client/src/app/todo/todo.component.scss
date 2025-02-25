@@ -1,4 +1,40 @@
 .todo-card {
   height: calc(100% - 2em);
   margin: 1em;
+  padding: 0;
+
+  .todo-content {
+    padding: 1em 0;
+
+    .add-todo-item-btn {
+      margin: 1em;
+    }
+
+    .new-todo-item {
+      padding: 0 1em;
+      background-color: var(--mat-sys-surface-container-high);
+    }
+
+    .todo-item-form {
+      padding: 1em 0;
+
+      .todo-item-form-field {
+        width: 100%;
+      }
+    }
+
+    .todo-item {
+      padding: 0 1em;
+      display: flex;
+      align-items: center;
+
+      .todo-item-name {
+        flex-grow: 1;
+      }
+
+      &.selected {
+        background-color: var(--mat-sys-surface-container-high);
+      }
+    }
+  }
 }

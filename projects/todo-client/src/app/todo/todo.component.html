@@ -1,15 +1,46 @@
 <mat-card class="todo-card">
   @if (todo.hasValue()) {
-  <mat-card-header>
+  <mat-card-header class="todo-header">
     <mat-card-title>{{ todo.value()?.title }}</mat-card-title>
     <mat-card-subtitle>{{ todo.value()?.description }}</mat-card-subtitle>
   </mat-card-header>
-  <mat-card-content>
+  <mat-card-content class="todo-content">
+    <button mat-button class="add-todo-item-btn" (click)="onAddTodoItem()">
+      <mat-icon>add_task</mat-icon>
+      Add Todo Item
+    </button>
+    @if (showNewTodoForm()) {
+      <div class="new-todo-item">
+        <ng-container [ngTemplateOutlet]="todoItem"></ng-container>
+      </div>
+    }
     @if (todo.value()?.todoItems?.length) {
-      @for (todoItem of todo.value()?.todoItems; track $index) {
-        <mat-checkbox>{{ todoItem.name }}</mat-checkbox>
+      @for (todoItem of todo.value()?.todoItems; track todoItem._id) {
+        <div class="todo-item" [class.selected]="selectedTodoItem()?._id === todoItem._id">
+          <button mat-icon-button (click)="toggleTodoItem(todoItem)">
+            <mat-icon>{{ todoItem.completed ? 'task_alt' : 'radio_button_unchecked' }}</mat-icon>
+          </button>
+          <div class="todo-item-name" tabIndex="-1" (click)="selectTodoItem(todoItem)">{{ todoItem.name }}</div>
+          @if (selectedTodoItem()?._id === todoItem._id) {
+            <button mat-icon-button (click)="deleteTodoItem(todoItem._id)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          }
+        </div>
       }
     }
+
   </mat-card-content>
   }
 </mat-card>
+
+<ng-template #todoItem>
+  <form [formGroup]="todoItemForm" (focusout)="onTodoItemFormBlur($event)" class="todo-item-form" #todoItemFormEl>
+    <mat-form-field class="todo-item-form-field" appearance="outline">
+      <input matInput placeholder="Name" formControlName="name">
+    </mat-form-field>
+    <mat-form-field class="todo-item-form-field" appearance="outline">
+      <textarea matInput placeholder="Details" formControlName="description"></textarea>
+    </mat-form-field>
+  </form>
+</ng-template>

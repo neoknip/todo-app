@@ -1,7 +1,8 @@
 import express, { Router } from "express";
 import { Todo } from "../models/todo";
 import { ObjectId } from "mongodb";
-import { collections } from "../services/db.service";
+import { collections } from "../utils/db.utility";
+import { AddTodoItemPayload, TodoItem } from "@models/todo-item";
 
 export const todoRouter = Router();
 
@@ -63,7 +64,7 @@ todoRouter.put("/:id", async (req, res) => {
     const query = { _id: new ObjectId(id) };
     const task = req.body as Todo;
     const result = await collections.todos?.replaceOne(query, task);
-    result ? res.send() : res.status(500).send("Failed to update task");
+    result ? res.status(204).send() : res.status(500).send("Failed to update task");
   }
   catch (error: any) {
     console.error(error);
@@ -79,10 +80,68 @@ todoRouter.delete("/:id", async (req, res) => {
   try {
     const query = { _id: new ObjectId(id) };
     const result = await collections.todos?.deleteOne(query);
-    result ? res.send() : res.status(500).send("Failed to delete task");
+    result ? res.status(204).send() : res.status(500).send("Failed to delete task");
   }
   catch (error: any) {
     console.error(error);
     res.status(500).send(`Failed to delete task: ${error.message}`);
   }
 });
+
+todoRouter.post("/:id/item", async (req, res) => {
+  const id = req.params.id;
+  try {
+    const query = { _id: new ObjectId(id) };
+    const payload = req.body as AddTodoItemPayload;
+    const todoItem = {
+      _id: new ObjectId(),
+      ...payload.todoItem
+    } as TodoItem;
+    const result = await collections.todos?.updateOne(query, {
+      $push: {
+        todoItems: todoItem
+      }
+    });
+    result ? res.status(200).send({
+      todoItem_ids: todoItem._id
+    }) : res.status(500).send("Failed to add todo item");
+  }
+  catch (error: any) {
+    console.error(error);
+    res.status(500).send(`Failed to add todo item: ${error.message}`);
+  }
+});
+
+todoRouter.put("/:id/item", async (req, res) => {
+  const id = req.params.id;
+  const todoItem = req.body as TodoItem;
+  try {
+    const query = { _id: new ObjectId(id), "todoItems._id": new ObjectId(todoItem._id)};
+    const result = await collections.todos?.updateOne(query, {
+      $set: {"todoItems.$": todoItem}
+    });
+    result ? res.status(204).send(): res.status(500).send('Failed to update todo item');
+  }
+  catch (error: any) {
+    console.error(error);
+    res.status(500).send(`Failed to update todo item: ${error.message}`);
+  }
+});
+
+todoRouter.delete("/:id/item/:itemId", async (req, res) => {
+  const id = req.params.id;
+  const todoItemId = req.params.itemId;
+  try {
+    const query = { _id: new ObjectId(id)};
+    const result = await collections.todos?.updateOne(query, {
+      $pull: {
+        todoItems: { _id: new ObjectId(todoItemId)}
+      }
+    });
+    result ? res.status(204).send() : res.status(500).send('Failed to delete todo item');
+  }
+  catch (error: any) {
+    console.error(error);
+    res.status(500).send(`Failed to delete todo item: ${error.message}`);
+  }
+})

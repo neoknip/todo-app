@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import { initializeDB } from "./services/db.service";
+import { initializeDB } from "./utils/db.utility";
 import { todoRouter } from "./routers/todo.router";
 
 dotenv.config();

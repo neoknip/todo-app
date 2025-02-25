@@ -3,9 +3,9 @@
 @use "@angular/material" as mat;
 
 html {
+  color-scheme: light dark;
   @include mat.theme(
     (
-      color-scheme: light dark,
       color: (
         primary: mat.$violet-palette,
         tertiary: mat.$azure-palette
@@ -30,6 +30,7 @@ html {
   @include mat.card-overrides((
     outlined-container-color: var(--mat-sys-surface-container-low),
     outlined-outline-color: var(--mat-sys-surface-container-low),
+    subtitle-text-color: var(--mat-sys-on-surface),
   ));
 } /* You can add global styles to this file, and also import other style files */
 

@@ -7,3 +7,6 @@ export interface Todo {
     description: string;
     todoItems: TodoItem[];
 }
+
+export type CreateTodoPayload = Omit<Todo, '_id'>;
+export type CreateTodoResponse = Pick<Todo, '_id'>;
