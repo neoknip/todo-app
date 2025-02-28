@@ -6,9 +6,9 @@
   @if (todos.hasValue() && todos.value()?.length) {
     <mat-nav-list class="todo-nav-list">
       @for (todo of todos.value(); track todo._id) {
-      <mat-list-item [routerLink]="[todo._id]" routerLinkActive #rla="routerLinkActive" [activated]="rla.isActive">
+      <mat-list-item [activated]="selectedTodoId() === todo._id" (click)="selectTodo(todo)">
         <div matListItemTitle >{{ todo.title }}</div>
-        @if (rla.isActive) {
+        @if (selectedTodoId() === todo._id) {
           <button mat-icon-button (click)="deleteTodo(todo)" matListItemMeta>
             <mat-icon>delete</mat-icon>
           </button>
