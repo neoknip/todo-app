@@ -10,6 +10,7 @@ import { ScreenService } from '@app/services/screen.service';
 import { DeviceType } from '@app/models/device-type';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { ScreenOrientation } from '@app/models/screen-orientation';
 
 @Component({
   selector: 'app-todos',
@@ -21,7 +22,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatSidenavModule,
     RouterOutlet,
     TodoListComponent
-],
+  ],
   templateUrl: './todos.component.html',
   styleUrl: './todos.component.scss'
 })
@@ -30,13 +31,21 @@ export class TodosComponent {
   private _screenService = inject(ScreenService);
 
   public readonly todoListMode = computed<MatDrawerMode>(() => {
-    return this._screenService.deviceType() === DeviceType.Desktop ? 'side' : 'over';
+    if (this._screenService.deviceType() === DeviceType.Desktop ||
+      (this._screenService.deviceType() === DeviceType.Tablet && this._screenService.screenOrientation() === ScreenOrientation.Landscape)) {
+      return 'side'
+    }
+    else {
+      return 'over';
+    }
   });
   public readonly showTodoListOpenToggle = computed(() => {
-    return this._screenService.deviceType() !== DeviceType.Desktop;
+    return !(this._screenService.deviceType() === DeviceType.Desktop ||
+      (this._screenService.deviceType() === DeviceType.Tablet && this._screenService.screenOrientation() === ScreenOrientation.Landscape));
   });
   public readonly todoListOpened = linkedSignal(() => {
-    return this._screenService.deviceType() === DeviceType.Desktop;
+    return (this._screenService.deviceType() === DeviceType.Desktop ||
+    (this._screenService.deviceType() === DeviceType.Tablet && this._screenService.screenOrientation() === ScreenOrientation.Landscape));
   });
 
   public toggleTodoListOpened(): void {
