@@ -32,6 +32,10 @@ html {
     outlined-outline-color: var(--mat-sys-surface-container-low),
     subtitle-text-color: var(--mat-sys-on-surface),
   ));
+
+  @include mat.dialog-overrides((
+    container-color: var(--mat-sys-surface-container-highest),
+  ));
 } /* You can add global styles to this file, and also import other style files */
 
 html,

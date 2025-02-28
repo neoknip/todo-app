@@ -107,7 +107,7 @@ export class TodoComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  onTodoItemFormBlur(event: FocusEvent): void {
+  onNewTodoItemFormBlur(event: FocusEvent): void {
     if (this.todoItemFormElList.first.nativeElement.contains(event.relatedTarget as Node)) {
       //focus is still inside the form
       return;
@@ -123,9 +123,11 @@ export class TodoComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       }).subscribe({
         next: () => {
-          this.todoItemForm.reset();
-          this.showNewTodoForm.set(false);
-          this.todo.reload();
+          setTimeout(() => {
+            this.todoItemForm.reset();
+            this.showNewTodoForm.set(false);
+            this.todo.reload();
+          });
         },
         error: (error) => {
           console.error('Failed to add todo item', error);
@@ -133,9 +135,59 @@ export class TodoComponent implements OnInit, AfterViewInit, OnDestroy {
       });
     }
     else {
-      this.todoItemForm.reset();
-      this.showNewTodoForm.set(false);
+      setTimeout(() => {
+        this.showNewTodoForm.set(false);
+        this.todoItemForm.reset();
+      });
     }
+  }
+
+  public onEditTodoItemFormBlur(event: FocusEvent): void {
+    const selectedTodoItem = this.selectedTodoItem();
+    if (!selectedTodoItem)
+      return;
+
+    if (this.todoItemFormElList.first.nativeElement.contains(event.relatedTarget as Node)) {
+      //focus is still inside the form
+      return;
+    }
+    if (this.todoItemForm.valid && this.selectedTodoItemChanged()) {
+      const { name, description } = this.todoItemForm.value;
+      this._todoService.updateTodoItem(this.todoId(), {
+        ...selectedTodoItem,
+        name: name ?? '',
+        description: description ?? ''
+      }).subscribe({
+        next: () => {
+          setTimeout(() => {
+            this.todoItemForm.reset();
+            this.selectedTodoItem.set(null);
+            this.todo.reload();
+          })
+        },
+        error: (error) => {
+          console.error('Failed to update todo item', error);
+        }
+      })
+    }
+    else {
+      setTimeout(() => {
+        this.selectedTodoItem.set(null);
+        this.todoItemForm.reset();
+      })
+    }
+  }
+
+  private selectedTodoItemChanged(): boolean {
+    const selectedTodoItem = this.selectedTodoItem();
+
+    if (!selectedTodoItem)
+      return false;
+
+    const { name, description } = selectedTodoItem;
+    const { name: newName, description: newDescription } = this.todoItemForm.value;
+    return name !== newName || description !== newDescription;
+
   }
 
 }

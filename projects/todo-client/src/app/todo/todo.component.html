@@ -10,37 +10,46 @@
       ADD ITEM
     </button>
     @if (showNewTodoForm()) {
-      <div class="new-todo-item">
-        <div class="new-item-icon">
-          <mat-icon class="add-item-icon">radio_button_unchecked</mat-icon>
-        </div>
-        <div class="new-item-form-container">
-          <ng-container [ngTemplateOutlet]="todoItem"></ng-container>
-        </div>
+    <div class="new-todo-item">
+      <div class="new-item-icon">
+        <mat-icon class="add-item-icon">radio_button_unchecked</mat-icon>
       </div>
+      <div class="new-item-form-container" (focusout)="onNewTodoItemFormBlur($event)">
+        <ng-container [ngTemplateOutlet]="todoItemFormTmpl"></ng-container>
+      </div>
+    </div>
     }
     @if (todo.value()?.todoItems?.length) {
-      @for (todoItem of todo.value()?.todoItems; track todoItem._id) {
-        <div class="todo-item" [class.selected]="selectedTodoItem()?._id === todoItem._id">
-          <button mat-icon-button (click)="toggleTodoItem(todoItem)">
-            <mat-icon>{{ todoItem.completed ? 'task_alt' : 'radio_button_unchecked' }}</mat-icon>
-          </button>
-          <div class="todo-item-name" tabIndex="-1" (click)="selectTodoItem(todoItem)">{{ todoItem.name }}</div>
-          @if (selectedTodoItem()?._id === todoItem._id) {
-            <button mat-icon-button (click)="deleteTodoItem(todoItem._id)">
-              <mat-icon>delete</mat-icon>
-            </button>
-          }
-        </div>
+    @for (todoItem of todo.value()?.todoItems; track todoItem._id) {
+    <div class="todo-item" tabindex="0" [class.selected]="selectedTodoItem()?._id === todoItem._id"
+      (click)="selectTodoItem(todoItem)" (blur)="selectedTodoItem() ? onEditTodoItemFormBlur($event) : null">
+      <button mat-icon-button (click)="toggleTodoItem(todoItem)">
+        <mat-icon>{{ todoItem.completed ? 'task_alt' : 'radio_button_unchecked' }}</mat-icon>
+      </button>
+      @if (selectedTodoItem()?._id === todoItem._id) {
+      <div class="edit-item-form-container">
+        <ng-container [ngTemplateOutlet]="todoItemFormTmpl"></ng-container>
+      </div>
+      <button mat-icon-button (click)="deleteTodoItem(todoItem._id)">
+        <mat-icon>delete</mat-icon>
+      </button>
       }
+      @else {
+      <div class="todo-item-details">
+        <div class="todo-item-name">{{ todoItem.name }}</div>
+        <div class="todo-item-description">{{ todoItem.description }}</div>
+      </div>
+      }
+    </div>
+    }
     }
   </mat-card-content>
   }
 </mat-card>
 
-<ng-template #todoItem>
-  <form [formGroup]="todoItemForm" (focusout)="onTodoItemFormBlur($event)" class="todo-item-form" #todoItemFormEl>
-      <input class="item-name-input" placeholder="Name" formControlName="name">
-      <textarea class="item-details-ta" placeholder="Details" formControlName="description" maxlength="256"></textarea>
+<ng-template #todoItemFormTmpl>
+  <form [formGroup]="todoItemForm" class="todo-item-form" #todoItemFormEl>
+    <input class="item-name-input" placeholder="Name" formControlName="name">
+    <textarea class="item-details-ta" placeholder="Details" formControlName="description" maxlength="256"></textarea>
   </form>
 </ng-template>
