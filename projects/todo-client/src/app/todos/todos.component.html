@@ -1,9 +1,14 @@
 <main class="main">
   <mat-toolbar class="todo-toolbar">
+    @if (showTodoListOpenToggle()) {
+      <button mat-icon-button (click)="toggleTodoListOpened()">
+        <mat-icon>menu</mat-icon>
+      </button>
+    }
     <span>Todo App</span>
   </mat-toolbar>
   <mat-sidenav-container class="sidenav-container">
-    <mat-sidenav #sidenav mode="side" opened="true">
+    <mat-sidenav #sidenav [mode]="todoListMode()" [opened]="todoListOpened()" (openedChange)="onTodoListOpenedChange($event)">
       <section class="sidenav-section">
         <app-todo-list></app-todo-list>
       </section>

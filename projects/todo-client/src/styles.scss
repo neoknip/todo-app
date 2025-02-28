@@ -25,6 +25,7 @@ html {
     container-text-color: var(--mat-sys-on-surface),
     content-background-color: var(--mat-sys-surface-bright),
     content-text-color: var(--mat-sys-on-surface),
+    scrim-color: rgba(0, 0, 0, .32)
   ));
 
   @include mat.card-overrides((

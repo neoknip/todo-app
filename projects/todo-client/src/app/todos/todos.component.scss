@@ -1,3 +1,5 @@
+@use '@angular/material' as mat;
+
 main {
   width: 100%;
   height: 100%;
@@ -9,31 +11,26 @@ main {
     border-bottom: 1px solid var(--mat-sys-outline-variant);
   }
 
+  @include mat.sidenav-overrides((
+    container-width: 100%,
+    container-shape: 0,
+  ));
+
   .sidenav-container {
     flex-grow: 1;
 
     .sidenav-section {
       height: 100%;
+      width: 100%
     }
   }
 }
 
 @media screen and (min-width: 600px) {
-  main .content {
-
-    .todo-card {
-      width: 50%;
-    }
+  main {
+    @include mat.sidenav-overrides((
+      container-width: 360px,
+      container-shape: var(--mat-sys-corner-large)
+    ));
   }
-
-}
-
-@media screen and (min-width: 900px) {
-  main .content {
-
-    .todo-card {
-      width: 33.33%;
-    }
-  }
-
 }
